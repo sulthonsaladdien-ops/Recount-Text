@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RECOUNT TEXT - Media Pembelajaran Interaktif SMP Kelas IX</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Poppins & Nunito -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Tone.js untuk efek suara interaktif tanpa URL eksternal -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        nunito: ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            800: '#0F2547',
+                            900: '#0A192F',
+                        },
+                        electric: {
+                            500: '#2563EB',
+                            600: '#1D4ED8',
+                            400: '#3B82F6',
+                        },
+                        brandOrange: {
+                            500: '#F97316',
+                            600: '#EA580C',
+                            400: '#FB923C',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F0F4F8;
+            color: #0F2547;
+            overflow-x: hidden;
+        }
+
+        .font-nunito {
+            font-family: 'Nunito', sans-serif;
+        }
+
+        /* Animasi Transisi Halus */
+        .fade-in {
+            animation: fadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .float-anim {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #E2E8F0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2563EB;
+            border-radius: 9999px;
+        }
+
+        /* Highlight Styles untuk Analisis Teks */
+        .hl-orientation { background-color: #DBEAFE; border-bottom: 2px solid #2563EB; padding: 2px 4px; border-radius: 4px; }
+        .hl-events { background-color: #FFEDD5; border-bottom: 2px solid #F97316; padding: 2px 4px; border-radius: 4px; }
+        .hl-reorientation { background-color: #DCFCE7; border-bottom: 2px solid #16A34A; padding: 2px 4px; border-radius: 4px; }
+        .hl-past { background-color: #FEF08A; color: #854D0E; font-weight: 700; padding: 1px 5px; border-radius: 6px; border: 1px dashed #CA8A04; }
+
+        /* Card 3D Claymorphism / EdTech feel */
+        .edtech-card {
+            background: #FFFFFF;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(10, 25, 47, 0.07), 0 8px 10px -6px rgba(10, 25, 47, 0.04);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s ease;
+        }
+        .edtech-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.12), 0 8px 10px -6px rgba(37, 99, 235, 0.08);
+        }
+
+        .btn-3d {
+            transition: all 0.15s ease;
+            box-shadow: 0 4px 0 rgba(10, 25, 47, 0.25);
+        }
+        .btn-3d:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 rgba(10, 25, 47, 0.25);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- CUSTOM TOAST / NOTIFICATION MODAL (Pengganti alert()) -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- CUSTOM MODAL DIALOG -->
+    <div id="custom-modal" class="fixed inset-0 bg-navy-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border-2 border-electric-500 fade-in">
+            <div class="flex items-center gap-3 mb-3">
+                <div id="modal-icon" class="w-12 h-12 rounded-2xl bg-blue-100 text-electric-600 flex items-center justify-center text-2xl">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+                <h3 id="modal-title" class="text-xl font-bold text-navy-900">Informasi</h3>
+            </div>
+            <p id="modal-message" class="text-slate-600 text-sm leading-relaxed mb-6"></p>
+            <div class="flex justify-end">
+                <button onclick="closeModal()" class="px-6 py-2.5 bg-electric-500 hover:bg-electric-600 text-white font-semibold rounded-xl btn-3d">
+                    Mengerti!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 1. LANDING PAGE / HALAMAN UTAMA ==================== -->
+    <section id="landing-page" class="min-h-screen bg-gradient-to-br from-navy-900 via-navy-800 to-electric-600 text-white flex flex-col justify-between relative overflow-hidden">
+        <!-- Decorative Background Shapes -->
+        <div class="absolute top-[-10%] left-[-5%] w-72 h-72 bg-electric-500/30 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-[-10%] right-[-5%] w-96 h-96 bg-brandOrange-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Top Header Bar -->
+        <header class="w-full max-w-7xl mx-auto px-4 sm:px-8 py-5 flex flex-wrap items-center justify-between gap-4 z-10">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-brandOrange-500 flex items-center justify-center text-white font-extrabold text-xl shadow-lg">
+                    <i class="fa-solid fa-book-open-reader"></i>
+                </div>
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-blue-200 font-semibold block">English Grade IX • Phase D</span>
+                    <span class="font-bold text-lg tracking-wide">SMP Negeri 1 Kalianda</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSound()" id="landing-sound-btn" class="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 flex items-center gap-2 text-sm font-semibold transition">
+                    <i id="landing-sound-icon" class="fa-solid fa-volume-high text-brandOrange-400"></i>
+                    <span id="landing-sound-text">SOUND ON</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Hero Content -->
+        <main class="w-full max-w-7xl mx-auto px-4 sm:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center z-10">
+            <!-- Left Text Column -->
+            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-brandOrange-400 text-xs sm:text-sm font-bold tracking-wide">
+                    <i class="fa-solid fa-sparkles"></i> MEDIA PEMBELAJARAN INTERAKTIF (MPI)
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
+                    RECOUNT <span class="text-brandOrange-500">TEXT</span>
+                </h1>
+
+                <p class="text-xl sm:text-2xl font-nunito font-bold text-blue-200">
+                    "Explore the Past, Share the Story!"
+                </p>
+
+                <!-- Sapaan Pembuka -->
+                <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-4 sm:p-5 text-left relative">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-full bg-brandOrange-500 flex-shrink-0 flex items-center justify-center text-white mt-0.5">
+                            <i class="fa-solid fa-comment-dots"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm sm:text-base font-medium text-white leading-relaxed">
+                                "Hello, Students! Welcome to our English Learning Adventure. Today, we are going to explore <strong>Recount Text</strong>!"
+                            </p>
+                            <button onclick="speakText('Hello, Students! Welcome to our English Learning Adventure. Today, we are going to explore Recount Text!', 'en-US')" class="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-brandOrange-400 hover:text-brandOrange-300 transition">
+                                <i class="fa-solid fa-volume-high"></i> Dengarkan Sapaan Guru
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Identitas Penyusun -->
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs sm:text-sm text-blue-100">
+                    <span class="flex items-center gap-2 bg-navy-900/50 px-3.5 py-2 rounded-xl border border-white/10">
+                        <i class="fa-solid fa-user-tie text-brandOrange-400"></i> Penyusun: <strong>Sulton, S.Pd.</strong>
+                    </span>
+                    <span class="flex items-center gap-2 bg-navy-900/50 px-3.5 py-2 rounded-xl border border-white/10">
+                        <i class="fa-solid fa-school text-electric-400"></i> SMP Negeri 1 Kalianda
+                    </span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                    <button onclick="enterDashboard()" class="w-full sm:w-auto px-8 py-4 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-extrabold text-lg rounded-2xl btn-3d flex items-center justify-center gap-3 shadow-xl shadow-orange-500/30">
+                        <span>START LEARNING</span>
+                        <i class="fa-solid fa-rocket"></i>
+                    </button>
+                    <button onclick="enterDashboard('materi')" class="w-full sm:w-auto px-6 py-4 bg-white/15 hover:bg-white/25 text-white font-bold text-base rounded-2xl border border-white/25 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-compass"></i> Jelajahi 8 Menu
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right 3D Cartoon SVG Illustration -->
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="relative w-full max-w-md float-anim">
+                    <!-- 3D Style SVG Illustration: Siswa SMP menjelajahi buku cerita masa lalu -->
+                    <svg viewBox="0 0 500 460" class="w-full h-auto drop-shadow-2xl" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="bgBlob" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.4"/>
+                                <stop offset="100%" stop-color="#F97316" stop-opacity="0.4"/>
+                            </linearGradient>
+                            <linearGradient id="bookGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#F97316"/>
+                                <stop offset="100%" stop-color="#EA580C"/>
+                            </linearGradient>
+                            <linearGradient id="shirtGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#FFFFFF"/>
+                                <stop offset="100%" stop-color="#E2E8F0"/>
+                            </linearGradient>
+                            <linearGradient id="tieGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#1D4ED8"/>
+                                <stop offset="100%" stop-color="#0F2547"/>
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Glowing Backdrop Circle -->
+                        <circle cx="250" cy="235" r="195" fill="url(#bgBlob)" />
+                        <circle cx="250" cy="235" r="155" fill="#1E3A8A" opacity="0.55" />
+
+                        <!-- Floating Memory Polaroids & Icons -->
+                        <g transform="translate(55, 75) rotate(-12)">
+                            <rect x="0" y="0" width="76" height="86" rx="10" fill="#FFFFFF" />
+                            <rect x="7" y="7" width="62" height="54" rx="6" fill="#38BDF8" />
+                            <circle cx="24" cy="24" r="8" fill="#FDE047" />
+                            <path d="M7 61 L28 36 L44 52 L55 41 L69 61 Z" fill="#0284C7" />
+                            <rect x="14" y="69" width="48" height="6" rx="3" fill="#CBD5E1" />
+                        </g>
+
+                        <g transform="translate(365, 65) rotate(14)">
+                            <rect x="0" y="0" width="76" height="86" rx="10" fill="#FFFFFF" />
+                            <rect x="7" y="7" width="62" height="54" rx="6" fill="#FB923C" />
+                            <circle cx="52" cy="22" r="7" fill="#FEF08A" />
+                            <path d="M7 61 Q38 35 69 61 Z" fill="#16A34A" />
+                            <rect x="14" y="69" width="48" height="6" rx="3" fill="#CBD5E1" />
+                        </g>
+
+                        <!-- Clock / Past Time Badge -->
+                        <g transform="translate(385, 210)">
+                            <circle cx="26" cy="26" r="26" fill="#F97316" />
+                            <circle cx="26" cy="26" r="19" fill="#FFFFFF" />
+                            <path d="M26 14 L26 26 L34 30" stroke="#0F2547" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                        </g>
+
+                        <!-- 3D Cartoon Student Character (SMP) -->
+                        <!-- Hair Back -->
+                        <ellipse cx="250" cy="175" rx="66" ry="62" fill="#1E293B" />
+                        <!-- Body / SMP Uniform -->
+                        <path d="M165 340 C165 275, 335 275, 335 340 Z" fill="url(#shirtGrad)" />
+                        <!-- Collar & Navy Blue Tie -->
+                        <polygon points="225,280 250,302 238,312 215,288" fill="#E2E8F0" />
+                        <polygon points="275,280 250,302 262,312 285,288" fill="#E2E8F0" />
+                        <polygon points="244,296 256,296 260,338 250,348 240,338" fill="url(#tieGrad)" />
+                        <!-- SMP Pocket Badge -->
+                        <rect x="282" y="310" width="22" height="24" rx="4" fill="#2563EB" />
+                        <text x="293" y="325" font-size="8" font-weight="bold" fill="#FFFFFF" text-anchor="middle">SMP</text>
+
+                        <!-- Neck & Face -->
+                        <rect x="236" y="242" width="28" height="36" rx="12" fill="#FDBA74" />
+                        <rect x="196" y="135" width="108" height="118" rx="52" fill="#FED7AA" />
+                        <!-- Cheeks -->
+                        <ellipse cx="216" cy="212" rx="10" ry="6" fill="#FB7185" opacity="0.45" />
+                        <ellipse cx="284" cy="212" rx="10" ry="6" fill="#FB7185" opacity="0.45" />
+                        <!-- Eyes -->
+                        <circle cx="228" cy="194" r="8" fill="#0F172A" />
+                        <circle cx="231" cy="191" r="3" fill="#FFFFFF" />
+                        <circle cx="272" cy="194" r="8" fill="#0F172A" />
+                        <circle cx="275" cy="191" r="3" fill="#FFFFFF" />
+                        <!-- Eyebrows -->
+                        <path d="M216 178 Q228 172 240 178" stroke="#1E293B" stroke-width="4" stroke-linecap="round" fill="none"/>
+                        <path d="M260 178 Q272 172 284 178" stroke="#1E293B" stroke-width="4" stroke-linecap="round" fill="none"/>
+                        <!-- Happy Smile -->
+                        <path d="M235 220 Q250 236 265 220" stroke="#9A3412" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                        <!-- Front Hair -->
+                        <path d="M192 175 C192 115, 308 115, 308 175 C292 148, 265 155, 250 142 C230 158, 208 150, 192 175 Z" fill="#0F172A" />
+
+                        <!-- Open 3D Story Book in Hands -->
+                        <g transform="translate(125, 315)">
+                            <!-- Book Cover -->
+                            <path d="M10 35 L125 55 L240 35 L248 95 L125 115 L2 95 Z" fill="url(#bookGrad)" />
+                            <!-- Left Page -->
+                            <path d="M16 25 Q70 15 125 42 L125 98 Q70 72 16 82 Z" fill="#FFFFFF" />
+                            <!-- Right Page -->
+                            <path d="M234 25 Q180 15 125 42 L125 98 Q180 72 234 82 Z" fill="#F8FAFC" />
+                            <!-- Page Lines -->
+                            <line x1="34" y1="42" x2="106" y2="52" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+                            <line x1="34" y1="56" x2="106" y2="66" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+                            <line x1="144" y1="52" x2="216" y2="42" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+                            <line x1="144" y1="66" x2="216" y2="56" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Hands holding book -->
+                            <circle cx="22" cy="65" r="14" fill="#FED7AA" />
+                            <circle cx="228" cy="65" r="14" fill="#FED7AA" />
+                        </g>
+
+                        <!-- Magic Sparkles -->
+                        <path d="M110 210 L115 222 L127 227 L115 232 L110 244 L105 232 L93 227 L105 222 Z" fill="#FDE047" />
+                        <path d="M360 155 L363 163 L371 166 L363 169 L360 177 L357 169 L349 166 L357 163 Z" fill="#38BDF8" />
+                    </svg>
+                </div>
+            </div>
+        </main>
+
+        <!-- Quick Menu Preview Bar on Landing -->
+        <footer class="w-full max-w-7xl mx-auto px-4 sm:px-8 pb-6 z-10">
+            <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-3 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs font-semibold text-blue-100">
+                <span class="text-brandOrange-400 font-bold uppercase tracking-wider">Fitur Lengkap:</span>
+                <span><i class="fa-solid fa-book mr-1"></i> Materi Interaktif</span> •
+                <span><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Simulasi Story Builder</span> •
+                <span><i class="fa-solid fa-flask mr-1"></i> Praktikum Analisis</span> •
+                <span><i class="fa-solid fa-gamepad mr-1"></i> Mini Game Edukasi</span> •
+                <span><i class="fa-solid fa-file-pen mr-1"></i> LKPD Digital</span> •
+                <span><i class="fa-solid fa-award mr-1"></i> Evaluasi & Sertifikat</span>
+            </div>
+        </footer>
+    </section>
+
+    <!-- ==================== 2. MAIN LEARNING DASHBOARD ==================== -->
+    <div id="app-dashboard" class="hidden min-h-screen flex-col">
+        <!-- Sticky Top Navbar -->
+        <nav class="sticky top-0 z-40 bg-navy-900 text-white shadow-lg border-b border-navy-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2">
+                <!-- Brand -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="backToLanding()">
+                    <div class="w-10 h-10 rounded-xl bg-brandOrange-500 flex items-center justify-center text-white font-bold shadow">
+                        <i class="fa-solid fa-book-open-reader"></i>
+                    </div>
+                    <div class="leading-tight">
+                        <h1 class="font-extrabold text-base sm:text-lg tracking-wide">RECOUNT TEXT</h1>
+                        <p class="text-[11px] text-blue-300 hidden sm:block">Grade IX • SMP Negeri 1 Kalianda</p>
+                    </div>
+                </div>
+
+                <!-- Student Name Badge & Sound Toggle -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <div id="student-badge" onclick="promptStudentName()" class="cursor-pointer px-3 py-1.5 rounded-xl bg-navy-800 hover:bg-electric-600 border border-white/10 text-xs sm:text-sm font-semibold flex items-center gap-2 transition" title="Klik untuk ganti nama siswa">
+                        <i class="fa-solid fa-user-graduate text-brandOrange-400"></i>
+                        <span id="display-student-name">Siswa Kelas IX</span>
+                    </div>
+
+                    <button onclick="toggleSound()" class="p-2.5 rounded-xl bg-navy-800 hover:bg-electric-600 border border-white/10 transition" title="Suara Efek & Audio">
+                        <i id="nav-sound-icon" class="fa-solid fa-volume-high text-brandOrange-400"></i>
+                    </button>
+
+                    <button onclick="backToLanding()" class="p-2.5 rounded-xl bg-white/10 hover:bg-brandOrange-500 text-white transition" title="Kembali ke Halaman Pembuka">
+                        <i class="fa-solid fa-house"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 8 Menu Horizontal Navigation Bar (Responsive Scrollable on Mobile) -->
+            <div class="bg-navy-800/95 border-t border-white/10">
+                <div class="max-w-7xl mx-auto px-2 sm:px-6 py-2 flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar" id="main-nav-menu">
+                    <!-- Nav items injected by JS -->
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Dynamic Content Container -->
+        <main id="content-area" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <!-- Sections will be rendered dynamically here -->
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-navy-900 text-blue-200 py-5 px-4 text-center text-xs sm:text-sm border-t border-navy-800 mt-auto">
+            <p class="font-semibold text-white">Media Pembelajaran Interaktif (MPI) — Bahasa Inggris Kelas IX (Fase D)</p>
+            <p class="mt-1">Dikembangkan oleh <span class="text-brandOrange-400 font-bold">Sulton, S.Pd.</span> • SMP Negeri 1 Kalianda</p>
+        </footer>
+    </div>
+
+    <!-- ==================== JAVASCRIPT LOGIC & DATA ==================== -->
+    <script>
+        // --- 1. STATE MANAGEMENT ---
+        const appState = {
+            soundEnabled: true,
+            activeMenu: 'materi',
+            studentName: 'Siswa Kelas IX',
+            studentClass: 'IX A',
+            progress: {
+                materiVisited: true,
+                simulasiDone: false,
+                praktikumScore: 0,
+                gameScore: 0,
+                lkpdSubmitted: false,
+                evaluasiScore: null,
+                evaluasiCorrect: 0,
+                evaluasiTotal: 10
+            },
+            // Material sub-state
+            activeTextIndex: 0,
+            showTranslation: false,
+            highlightMode: 'none' // 'none', 'structure', 'past'
+        };
+
+        // 8 Menu Utama Definitions
+        const menuItems = [
+            { id: 'materi', label: '1. MATERI', icon: 'fa-book-open', color: 'bg-electric-500', badge: 'Inti' },
+            { id: 'simulasi', label: '2. SIMULASI', icon: 'fa-wand-magic-sparkles', color: 'bg-brandOrange-500', badge: 'Lab' },
+            { id: 'praktikum', label: '3. PRAKTIKUM', icon: 'fa-microscope', color: 'bg-teal-600', badge: 'Bedah Teks' },
+            { id: 'game', label: '4. GAME', icon: 'fa-gamepad', color: 'bg-purple-600', badge: 'Seru' },
+            { id: 'lkpd', label: '5. LKPD', icon: 'fa-file-pen', color: 'bg-indigo-600', badge: 'Tugas' },
+            { id: 'evaluasi', label: '6. EVALUASI', icon: 'fa-clipboard-check', color: 'bg-rose-600', badge: 'Kuis' },
+            { id: 'pengembang', label: '7. PENGEMBANG', icon: 'fa-id-card', color: 'bg-sky-600', badge: 'Profil' },
+            { id: 'hasil', label: '8. HASIL BELAJAR', icon: 'fa-chart-line', color: 'bg-emerald-600', badge: 'Rapor' }
+        ];
+
+        // --- 2. DATA MATERI RECOUNT TEXT (3 CONTOH LENGKAP) ---
+        const recountExamples = [
+            {
+                id: 'holiday',
+                title: '1. My Holiday in Kalianda Beach',
+                category: 'Personal Recount',
+                illustrationType: 'beach',
+                orientation: {
+                    en: "Last month, my family and I went to Marina Beach in Kalianda, South Lampung. We left our house at 7:00 AM by car.",
+                    id: "Bulan lalu, saya dan keluarga pergi ke Pantai Marina di Kalianda, Lampung Selatan. Kami berangkat dari rumah pukul 07.00 pagi dengan mobil."
+                },
+                events: {
+                    en: "When we arrived at the beach, the weather was very sunny and breezy. First, my younger brother and I played with the white sand and built a big sandcastle. After that, we swam near the shore and took many beautiful photos near the big rocks. At noon, we ate delicious grilled fish and drank fresh coconut water together.",
+                    id: "Ketika kami tiba di pantai, cuacanya sangat cerah dan berangin sepoi-sepoi. Pertama, adik laki-laki saya dan saya bermain pasir putih dan membangun istana pasir yang besar. Setelah itu, kami berenang di dekat tepi pantai dan mengambil banyak foto indah di dekat batu karang besar. Pada siang hari, kami makan ikan bakar yang lezat dan minum air kelapa segar bersama."
+                },
+                reorientation: {
+                    en: "We went home at 4:30 PM. We felt very tired, but it was a wonderful holiday that I will never forget.",
+                    id: "Kami pulang ke rumah pukul 16.30 sore. Kami merasa sangat lelah, tetapi itu adalah liburan yang luar biasa yang tidak akan pernah saya lupakan."
+                },
+                pastVerbs: ['went', 'left', 'arrived', 'was', 'played', 'built', 'swam', 'took', 'ate', 'drank', 'felt'],
+                vocabulary: [
+                    { word: 'Went (Verb 2 of Go)', meaning: 'Pergi' },
+                    { word: 'Breezy', meaning: 'Berangin sepoi-sepoi' },
+                    { word: 'Sandcastle', meaning: 'Istana pasir' },
+                    { word: 'Shore', meaning: 'Tepi pantai' },
+                    { word: 'Grilled fish', meaning: 'Ikan bakar' },
+                    { word: 'Wonderful', meaning: 'Luar biasa / Menakjubkan' }
+                ]
+            },
+            {
+                id: 'unforgettable',
+                title: '2. My Unforgettable Experience',
+                category: 'Personal Recount',
+                illustrationType: 'trophy',
+                orientation: {
+                    en: "Two weeks ago, I joined an English Storytelling Competition at my school. It was my first time performing on a big stage in front of many students and teachers.",
+                    id: "Dua minggu yang lalu, saya mengikuti Lomba Bercerita Bahasa Inggris di sekolah saya. Itu adalah pertama kalinya saya tampil di panggung besar di depan banyak siswa dan guru."
+                },
+                events: {
+                    en: "Before my turn, I felt very nervous and my hands were cold. Then, my English teacher encouraged me to take a deep breath and smile. When the MC called my name, I walked onto the stage confidently. I told a story about a clever mouse deer with expressive voice and gestures. Everyone clapped loudly when I finished.",
+                    id: "Sebelum giliran saya, saya merasa sangat gugup dan tangan saya dingin. Kemudian, guru Bahasa Inggris saya menyemangati saya untuk menarik napas dalam dan tersenyum. Ketika MC memanggil nama saya, saya berjalan ke atas panggung dengan percaya diri. Saya menceritakan kisah tentang kancil yang cerdik dengan suara dan gerakan yang ekspresif. Semua orang bertepuk tangan meriah ketika saya selesai."
+                },
+                reorientation: {
+                    en: "At the end of the event, the judges announced that I won the first prize. I was so proud and happy. That became my most unforgettable experience.",
+                    id: "Di akhir acara, para juri mengumumkan bahwa saya memenangkan juara pertama. Saya sangat bangga dan bahagia. Itu menjadi pengalaman paling tak terlupakan bagi saya."
+                },
+                pastVerbs: ['joined', 'was', 'felt', 'were', 'encouraged', 'called', 'walked', 'told', 'clapped', 'finished', 'announced', 'won', 'became'],
+                vocabulary: [
+                    { word: 'Unforgettable', meaning: 'Tak terlupakan' },
+                    { word: 'Stage', meaning: 'Panggung' },
+                    { word: 'Nervous', meaning: 'Gugup' },
+                    { word: 'Encouraged', meaning: 'Menyemangati / Mendorong' },
+                    { word: 'Confidently', meaning: 'Dengan percaya diri' },
+                    { word: 'Judges', meaning: 'Para juri' }
+                ]
+            },
+            {
+                id: 'schooltrip',
+                title: '3. My School Trip to Lampung Museum',
+                category: 'Factual / Personal Recount',
+                illustrationType: 'museum',
+                orientation: {
+                    en: "Last Saturday, the ninth-grade students of SMP Negeri 1 Kalianda went on a school trip to Lampung Museum in Bandar Lampung. We traveled there using three big buses.",
+                    id: "Sabtu lalu, siswa kelas sembilan SMP Negeri 1 Kalianda melakukan karyawisata sekolah ke Museum Lampung di Bandar Lampung. Kami pergi ke sana menggunakan tiga bus besar."
+                },
+                events: {
+                    en: "We arrived at the museum at 9:30 AM. A friendly tour guide welcomed us and explained the history of Lampung. Inside the museum, we saw traditional clothes, ancient inscriptions, and historical weapons. We also took notes for our English and History group reports.",
+                    id: "Kami tiba di museum pukul 09.30 pagi. Seorang pemandu wisata yang ramah menyambut kami dan menjelaskan sejarah Lampung. Di dalam museum, kami melihat pakaian adat, prasasti kuno, dan senjata bersejarah. Kami juga mencatat untuk laporan kelompok Bahasa Inggris dan Sejarah kami."
+                },
+                reorientation: {
+                    en: "Finally, we bought some souvenirs before returning to Kalianda in the afternoon. The school trip was very educational and fun.",
+                    id: "Akhirnya, kami membeli beberapa cenderamata sebelum kembali ke Kalianda pada sore hari. Karyawisata sekolah tersebut sangat edukatif dan menyenangkan."
+                },
+                pastVerbs: ['went', 'traveled', 'arrived', 'welcomed', 'explained', 'saw', 'took', 'bought', 'was'],
+                vocabulary: [
+                    { word: 'School trip', meaning: 'Karyawisata sekolah' },
+                    { word: 'Tour guide', meaning: 'Pemandu wisata' },
+                    { word: 'Ancient inscriptions', meaning: 'Prasasti kuno' },
+                    { word: 'Weapons', meaning: 'Senjata' },
+                    { word: 'Souvenirs', meaning: 'Cenderamata / Oleh-oleh' },
+                    { word: 'Educational', meaning: 'Bersifat mendidik / Edukatif' }
+                ]
+            }
+        ];
+
+        // --- 3. AUDIO & SPEECH SYNTHESIS SYSTEM ---
+        let synth = null;
+
+        function playSoundEffect(type = 'click') {
+            if (!appState.soundEnabled) return;
+            try {
+                if (typeof Tone !== 'undefined') {
+                    if (Tone.context.state !== 'running') {
+                        Tone.start();
+                    }
+                    if (!synth) {
+                        synth = new Tone.Synth().toDestination();
+                    }
+                    if (type === 'click') {
+                        synth.triggerAttackRelease("C5", "32n");
+                    } else if (type === 'success') {
+                        synth.triggerAttackRelease("E5", "16n");
+                        setTimeout(() => synth.triggerAttackRelease("G5", "16n"), 90);
+                        setTimeout(() => synth.triggerAttackRelease("C6", "8n"), 180);
+                    } else if (type === 'error') {
+                        synth.triggerAttackRelease("A3", "16n");
+                        setTimeout(() => synth.triggerAttackRelease("F3", "8n"), 120);
+                    }
+                }
+            } catch (e) {
+                // Silent fallback if audio context blocked
+            }
+        }
+
+        function toggleSound() {
+            appState.soundEnabled = !appState.soundEnabled;
+            const landingIcon = document.getElementById('landing-sound-icon');
+            const landingText = document.getElementById('landing-sound-text');
+            const navIcon = document.getElementById('nav-sound-icon');
+
+            if (appState.soundEnabled) {
+                if (landingIcon) landingIcon.className = 'fa-solid fa-volume-high text-brandOrange-400';
+                if (landingText) landingText.textContent = 'SOUND ON';
+                if (navIcon) navIcon.className = 'fa-solid fa-volume-high text-brandOrange-400';
+                playSoundEffect('click');
+                showToast('Suara & Audio Diaktifkan', 'success');
+            } else {
+                window.speechSynthesis.cancel();
+                if (landingIcon) landingIcon.className = 'fa-solid fa-volume-xmark text-slate-400';
+                if (landingText) landingText.textContent = 'SOUND OFF';
+                if (navIcon) navIcon.className = 'fa-solid fa-volume-xmark text-slate-400';
+                showToast('Suara Dinonaktifkan', 'info');
+            }
+        }
+
+        function speakText(text, lang = 'en-US') {
+            if (!appState.soundEnabled) {
+                showToast('Aktifkan tombol SOUND terlebih dahulu untuk mendengarkan audio!', 'warning');
+                return;
+            }
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = lang;
+                utterance.rate = 0.92; // Sedikit lebih lambat agar jelas untuk siswa SMP
+                utterance.pitch = 1.05;
+                window.speechSynthesis.speak(utterance);
+                showToast(lang === 'en-US' ? '🔊 Membacakan teks Bahasa Inggris...' : '🔊 Membacakan penjelasan...', 'info');
+            } else {
+                showModal('Audio Tidak Didukung', 'Browser Anda tidak mendukung fitur Text-to-Speech.');
+            }
+        }
+
+        function stopSpeaking() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        // --- 4. UI HELPERS (TOAST & MODAL) ---
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const colors = {
+                info: 'bg-navy-900 text-white border-electric-500',
+                success: 'bg-emerald-600 text-white border-emerald-300',
+                warning: 'bg-brandOrange-500 text-white border-orange-200',
+                error: 'bg-rose-600 text-white border-rose-300'
+            };
+            toast.className = `${colors[type] || colors.info} px-4 py-3 rounded-2xl shadow-xl border-l-4 text-xs sm:text-sm font-semibold flex items-center gap-2.5 fade-in pointer-events-auto max-w-xs sm:max-w-sm`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2800);
+        }
+
+        function showModal(title, message, iconClass = 'fa-circle-info') {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').innerHTML = message;
+            document.getElementById('modal-icon').innerHTML = `<i class="fa-solid ${iconClass}"></i>`;
+            const modal = document.getElementById('custom-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            playSoundEffect('click');
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function promptStudentName() {
+            const container = document.getElementById('content-area');
+            showModal(
+                'Identitas Siswa',
+                `<div class="space-y-3 text-left">
+                    <p class="text-xs text-slate-500">Masukkan nama lengkapmu untuk ditampilkan di LKPD dan Sertifikat Hasil Belajar:</p>
+                    <input id="input-student-name" type="text" value="${appState.studentName}" class="w-full px-3.5 py-2.5 border-2 border-slate-200 rounded-xl focus:border-electric-500 outline-none font-semibold text-navy-900" placeholder="Contoh: Ahmad Rizki">
+                    <input id="input-student-class" type="text" value="${appState.studentClass}" class="w-full px-3.5 py-2.5 border-2 border-slate-200 rounded-xl focus:border-electric-500 outline-none font-semibold text-navy-900" placeholder="Kelas (Contoh: IX A)">
+                    <button onclick="saveStudentProfile()" class="w-full py-2.5 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-bold rounded-xl mt-2">Simpan Identitas</button>
+                </div>`,
+                'fa-user-graduate'
+            );
+        }
+
+        function saveStudentProfile() {
+            const nameVal = document.getElementById('input-student-name').value.trim();
+            const classVal = document.getElementById('input-student-class').value.trim();
+            if (nameVal) appState.studentName = nameVal;
+            if (classVal) appState.studentClass = classVal;
+            document.getElementById('display-student-name').textContent = `${appState.studentName} (${appState.studentClass})`;
+            closeModal();
+            showToast(`Halo, ${appState.studentName}! Selamat belajar!`, 'success');
+            if (appState.activeMenu === 'hasil' || appState.activeMenu === 'lkpd') {
+                navigateTo(appState.activeMenu);
+            }
+        }
+
+        // --- 5. NAVIGATION SYSTEM ---
+        function enterDashboard(initialMenu = 'materi') {
+            playSoundEffect('success');
+            document.getElementById('landing-page').classList.add('hidden');
+            const dash = document.getElementById('app-dashboard');
+            dash.classList.remove('hidden');
+            dash.classList.add('flex');
+            renderNavMenu();
+            navigateTo(initialMenu);
+        }
+
+        function backToLanding() {
+            playSoundEffect('click');
+            stopSpeaking();
+            document.getElementById('app-dashboard').classList.add('hidden');
+            document.getElementById('app-dashboard').classList.remove('flex');
+            document.getElementById('landing-page').classList.remove('hidden');
+        }
+
+        function renderNavMenu() {
+            const navContainer = document.getElementById('main-nav-menu');
+            navContainer.innerHTML = menuItems.map(item => {
+                const isActive = appState.activeMenu === item.id;
+                return `
+                    <button onclick="navigateTo('${item.id}')"
+                        class="flex-shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all ${
+                            isActive
+                            ? 'bg-brandOrange-500 text-white shadow-md scale-[1.02]'
+                            : 'bg-navy-900/60 text-blue-100 hover:bg-electric-600 hover:text-white'
+                        }">
+                        <i class="fa-solid ${item.icon}"></i>
+                        <span>${item.label}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function navigateTo(menuId) {
+            playSoundEffect('click');
+            stopSpeaking();
+            appState.activeMenu = menuId;
+            renderNavMenu();
+
+            const content = document.getElementById('content-area');
+            content.innerHTML = '';
+
+            switch (menuId) {
+                case 'materi':
+                    appState.progress.materiVisited = true;
+                    renderMateri(content);
+                    break;
+                case 'simulasi':
+                    renderSimulasi(content);
+                    break;
+                case 'praktikum':
+                    renderPraktikum(content);
+                    break;
+                case 'game':
+                    renderGame(content);
+                    break;
+                case 'lkpd':
+                    renderLKPD(content);
+                    break;
+                case 'evaluasi':
+                    renderEvaluasi(content);
+                    break;
+                case 'pengembang':
+                    renderPengembang(content);
+                    break;
+                case 'hasil':
+                    renderHasilBelajar(content);
+                    break;
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- 6. MENU 1: MATERI (LEARNING MATERIALS) ---
+        function getExampleIllustrationSVG(type) {
+            if (type === 'beach') {
+                return `
+                <svg viewBox="0 0 320 180" class="w-full h-44 rounded-2xl shadow-inner bg-sky-200">
+                    <rect width="320" height="180" fill="#7DD3FC"/>
+                    <circle cx="265" cy="42" r="22" fill="#FDE047"/>
+                    <path d="M0 110 Q80 100 160 110 T320 110 L320 140 L0 140 Z" fill="#0284C7"/>
+                    <path d="M0 132 Q90 124 180 134 T320 130 L320 180 L0 180 Z" fill="#FDE68A"/>
+                    <!-- Sandcastle -->
+                    <rect x="125" y="122" width="44" height="28" rx="3" fill="#F59E0B"/>
+                    <rect x="133" y="108" width="28" height="16" rx="2" fill="#D97706"/>
+                    <polygon points="147,94 137,108 157,108" fill="#EF4444"/>
+                    <!-- Coconut Tree -->
+                    <path d="M48 155 Q58 105 42 65" stroke="#78350F" stroke-width="8" stroke-linecap="round" fill="none"/>
+                    <path d="M42 65 Q15 55 8 75" stroke="#16A34A" stroke-width="6" stroke-linecap="round" fill="none"/>
+                    <path d="M42 65 Q70 50 82 70" stroke="#16A34A" stroke-width="6" stroke-linecap="round" fill="none"/>
+                    <path d="M42 65 Q45 35 65 42" stroke="#22C55E" stroke-width="6" stroke-linecap="round" fill="none"/>
+                </svg>`;
+            } else if (type === 'trophy') {
+                return `
+                <svg viewBox="0 0 320 180" class="w-full h-44 rounded-2xl shadow-inner bg-indigo-900">
+                    <rect width="320" height="180" fill="#1E1B4B"/>
+                    <!-- Stage Curtains -->
+                    <path d="M0 0 L65 0 Q45 90 65 180 L0 180 Z" fill="#DC2626"/>
+                    <path d="M320 0 L255 0 Q275 90 255 180 L320 180 Z" fill="#DC2626"/>
+                    <!-- Spotlight -->
+                    <polygon points="160,0 95,160 225,160" fill="#FEF08A" opacity="0.22"/>
+                    <!-- Stage Floor -->
+                    <rect x="40" y="148" width="240" height="32" fill="#78350F"/>
+                    <!-- Gold Trophy -->
+                    <path d="M138 62 L182 62 L175 102 Q160 115 145 102 Z" fill="#FACC15"/>
+                    <rect x="155" y="106" width="10" height="22" fill="#EAB308"/>
+                    <rect x="142" y="128" width="36" height="14" rx="3" fill="#0F172A"/>
+                    <text x="160" y="88" font-size="16" font-weight="bold" fill="#854D0E" text-anchor="middle">1st</text>
+                </svg>`;
+            } else {
+                return `
+                <svg viewBox="0 0 320 180" class="w-full h-44 rounded-2xl shadow-inner bg-amber-50">
+                    <rect width="320" height="180" fill="#E0F2FE"/>
+                    <!-- Museum Classic Building -->
+                    <polygon points="160,24 65,68 255,68" fill="#F97316"/>
+                    <rect x="75" y="68" width="170" height="12" fill="#EA580C"/>
+                    <rect x="85" y="80" width="16" height="65" fill="#FFFFFF"/>
+                    <rect x="128" y="80" width="16" height="65" fill="#FFFFFF"/>
+                    <rect x="176" y="80" width="16" height="65" fill="#FFFFFF"/>
+                    <rect x="219" y="80" width="16" height="65" fill="#FFFFFF"/>
+                    <rect x="70" y="145" width="180" height="15" fill="#64748B"/>
+                    <text x="160" y="57" font-size="10" font-weight="bold" fill="#FFFFFF" text-anchor="middle">MUSEUM LAMPUNG</text>
+                    <rect x="0" y="160" width="320" height="20" fill="#22C55E"/>
+                </svg>`;
+            }
+        }
+
+        function formatPastVerbs(sentence, pastVerbs) {
+            if (appState.highlightMode !== 'past') return sentence;
+            let formatted = sentence;
+            pastVerbs.forEach(verb => {
+                const regex = new RegExp(`\\b(${verb})\\b`, 'gi');
+                formatted = formatted.replace(regex, `<span class="hl-past">$1</span>`);
+            });
+            return formatted;
+        }
+
+        function renderMateri(container) {
+            const currentEx = recountExamples[appState.activeTextIndex];
+            const fullEnglishText = `${currentEx.orientation.en} ${currentEx.events.en} ${currentEx.reorientation.en}`;
+            const fullMaterialSummary = "Recount Text is a text that retells events or experiences in the past. Its social function is to inform or entertain the readers. The generic structure consists of Orientation, Events, and Reorientation.";
+
+            container.innerHTML = `
+                <div class="fade-in space-y-8">
+                    <!-- Section Header -->
+                    <div class="bg-gradient-to-r from-navy-900 to-electric-600 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div>
+                            <span class="px-3 py-1 bg-brandOrange-500 rounded-full text-xs font-bold uppercase tracking-wider">Menu 1 • Learning Materials</span>
+                            <h2 class="text-2xl sm:text-3xl font-extrabold mt-2">Mengenal Recount Text Secara Mendalam</h2>
+                            <p class="text-blue-100 text-sm sm:text-base mt-1">Pelajari pengertian, struktur teks, unsur kebahasaan, dan contoh analisis cerita masa lalu.</p>
+                        </div>
+                        <button onclick="speakText('${fullMaterialSummary}', 'en-US')" class="px-5 py-3 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-bold rounded-2xl btn-3d flex items-center gap-2 text-sm flex-shrink-0">
+                            <i class="fa-solid fa-headphones"></i>
+                            <span>LISTEN TO THE MATERIAL</span>
+                        </button>
+                    </div>
+
+                    <!-- A & B: Definition & Social Function -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="edtech-card p-6 border-t-4 border-electric-500">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-11 h-11 rounded-2xl bg-blue-100 text-electric-600 flex items-center justify-center font-extrabold text-lg">A</div>
+                                <div>
+                                    <h3 class="font-extrabold text-lg text-navy-900">Definition of Recount Text</h3>
+                                    <span class="text-xs text-slate-500 font-semibold">Pengertian Teks Recount</span>
+                                </div>
+                            </div>
+                            <p class="text-sm sm:text-base text-slate-700 leading-relaxed mb-3">
+                                <strong>Recount Text</strong> is a type of text in English that retells events, activities, or personal experiences that happened in the past in chronological order.
+                            </p>
+                            <div class="bg-blue-50 p-3.5 rounded-xl border border-blue-100 text-xs sm:text-sm text-navy-800">
+                                <strong>Artinya:</strong> <em>Recount Text</em> adalah jenis teks dalam Bahasa Inggris yang menceritakan kembali kejadian, kegiatan, atau pengalaman pribadi yang sudah terjadi di <strong>masa lampau</strong> secara berurutan.
+                            </div>
+                        </div>
+
+                        <div class="edtech-card p-6 border-t-4 border-brandOrange-500">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-11 h-11 rounded-2xl bg-orange-100 text-brandOrange-600 flex items-center justify-center font-extrabold text-lg">B</div>
+                                <div>
+                                    <h3 class="font-extrabold text-lg text-navy-900">Social Function</h3>
+                                    <span class="text-xs text-slate-500 font-semibold">Tujuan Sosial / Fungsi Teks</span>
+                                </div>
+                            </div>
+                            <p class="text-sm sm:text-base text-slate-700 leading-relaxed mb-3">
+                                The social function of Recount Text is <strong>to retell past events or experiences</strong> in order to inform or entertain the readers/listeners.
+                            </p>
+                            <div class="bg-orange-50 p-3.5 rounded-xl border border-orange-100 text-xs sm:text-sm text-navy-800">
+                                <strong>Tujuan:</strong> Menceritakan kembali pengalaman atau peristiwa masa lalu untuk <strong>memberikan informasi</strong> atau <strong>menghibur</strong> pembaca.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- C: Generic Structure -->
+                    <div class="edtech-card p-6 sm:p-8">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-11 h-11 rounded-2xl bg-navy-900 text-white flex items-center justify-center font-extrabold text-lg">C</div>
+                            <div>
+                                <h3 class="font-extrabold text-xl text-navy-900">Generic Structure (Struktur Umum Teks)</h3>
+                                <p class="text-xs sm:text-sm text-slate-500">Setiap Recount Text tersusun atas 3 bagian utama berikut:</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <!-- 1. Orientation -->
+                            <div class="bg-blue-50/70 rounded-2xl p-5 border-2 border-blue-200 flex flex-col justify-between">
+                                <div>
+                                    <span class="px-3 py-1 bg-electric-500 text-white text-xs font-bold rounded-full">1. ORIENTATION</span>
+                                    <h4 class="font-bold text-navy-900 mt-3 mb-1">Pengenalan (Pembuka)</h4>
+                                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                        Memperkenalkan tokoh (<em>who</em>), tempat kejadian (<em>where</em>), dan waktu terjadinya peristiwa (<em>when</em>).
+                                    </p>
+                                </div>
+                                <div class="mt-4 bg-white p-3 rounded-xl border border-blue-100 text-xs">
+                                    <span class="font-bold text-electric-600 block mb-1">Contoh:</span>
+                                    <em>"Last Sunday, my friends and I went to Mutun Beach."</em>
+                                </div>
+                            </div>
+
+                            <!-- 2. Events -->
+                            <div class="bg-orange-50/70 rounded-2xl p-5 border-2 border-orange-200 flex flex-col justify-between">
+                                <div>
+                                    <span class="px-3 py-1 bg-brandOrange-500 text-white text-xs font-bold rounded-full">2. EVENTS</span>
+                                    <h4 class="font-bold text-navy-900 mt-3 mb-1">Rangkaian Peristiwa</h4>
+                                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                        Menceritakan urutan kejadian atau aktivitas yang dialami secara kronologis (Event 1, Event 2, dst.).
+                                    </p>
+                                </div>
+                                <div class="mt-4 bg-white p-3 rounded-xl border border-orange-100 text-xs">
+                                    <span class="font-bold text-brandOrange-600 block mb-1">Contoh:</span>
+                                    <em>"First, we swam in the sea. Then, we ate lunch together."</em>
+                                </div>
+                            </div>
+
+                            <!-- 3. Reorientation -->
+                            <div class="bg-emerald-50/70 rounded-2xl p-5 border-2 border-emerald-200 flex flex-col justify-between">
+                                <div>
+                                    <span class="px-3 py-1 bg-emerald-600 text-white text-xs font-bold rounded-full">3. REORIENTATION</span>
+                                    <h4 class="font-bold text-navy-900 mt-3 mb-1">Penutup / Kesan Akhir</h4>
+                                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                        Berisi rangkuman cerita, perasaan penulis (senang/sedih/lelah), atau komentar penutup (opsional).
+                                    </p>
+                                </div>
+                                <div class="mt-4 bg-white p-3 rounded-xl border border-emerald-100 text-xs">
+                                    <span class="font-bold text-emerald-600 block mb-1">Contoh:</span>
+                                    <em>"We felt very happy. It was an unforgettable day."</em>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- D & E: Language Features & Types -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- D. Language Features -->
+                        <div class="lg:col-span-7 edtech-card p-6">
+                            <div class="flex items-center gap-3 mb-5">
+                                <div class="w-11 h-11 rounded-2xl bg-electric-500 text-white flex items-center justify-center font-extrabold text-lg">D</div>
+                                <div>
+                                    <h3 class="font-extrabold text-lg text-navy-900">Language Features (Unsur Kebahasaan)</h3>
+                                    <span class="text-xs text-slate-500">5 ciri bahasa utama dalam Recount Text</span>
+                                </div>
+                            </div>
+                            <div class="space-y-3 text-xs sm:text-sm">
+                                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                                    <span class="font-bold text-electric-600">1. Simple Past Tense (Kata Kerja Bentuk Lampau / Verb 2):</span>
+                                    <p class="text-slate-600 mt-0.5">Menggunakan <em>Verb 2</em> atau <em>was/were</em>. Contoh: <em>go → <strong>went</strong>, visit → <strong>visited</strong>, eat → <strong>ate</strong>.</em></p>
+                                </div>
+                                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                                    <span class="font-bold text-electric-600">2. Action Verbs (Kata Kerja Tindakan):</span>
+                                    <p class="text-slate-600 mt-0.5">Kata kerja aktivitas fisik. Contoh: <em>walked, swam, played, took, bought.</em></p>
+                                </div>
+                                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                                    <span class="font-bold text-electric-600">3. Time Connectives (Kata Hubung Waktu):</span>
+                                    <p class="text-slate-600 mt-0.5">Menghubungkan urutan kejadian. Contoh: <em>First, Then, After that, Next, Finally.</em></p>
+                                </div>
+                                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                                    <span class="font-bold text-electric-600">4. Specific Participants (Pelaku Spesifik):</span>
+                                    <p class="text-slate-600 mt-0.5">Menyebut tokoh tertentu. Contoh: <em>I, my family, my classmates, Sulton.</em></p>
+                                </div>
+                                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                                    <span class="font-bold text-electric-600">5. Adverbs of Time and Place (Keterangan Waktu & Tempat):</span>
+                                    <p class="text-slate-600 mt-0.5">Contoh: <em>yesterday, last week, two days ago, at Marina Beach, in Kalianda.</em></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- E. Types of Recount Text -->
+                        <div class="lg:col-span-5 edtech-card p-6 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center gap-3 mb-5">
+                                    <div class="w-11 h-11 rounded-2xl bg-brandOrange-500 text-white flex items-center justify-center font-extrabold text-lg">E</div>
+                                    <div>
+                                        <h3 class="font-extrabold text-lg text-navy-900">Types of Recount Text</h3>
+                                        <span class="text-xs text-slate-500">Jenis-jenis Teks Recount</span>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-4">
+                                    <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200">
+                                        <h4 class="font-bold text-navy-900 flex items-center gap-2">
+                                            <i class="fa-solid fa-user-astronaut text-electric-600"></i> 1. Personal Recount
+                                        </h4>
+                                        <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                                            Menceritakan pengalaman pribadi penulis sendiri. Contoh: pengalaman liburan, ulang tahun, atau lomba.
+                                        </p>
+                                    </div>
+
+                                    <div class="p-4 rounded-2xl bg-orange-50 border border-orange-200">
+                                        <h4 class="font-bold text-navy-900 flex items-center gap-2">
+                                            <i class="fa-solid fa-newspaper text-brandOrange-600"></i> 2. Factual Recount
+                                        </h4>
+                                        <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                                            Menceritakan kejadian nyata berdasarkan fakta. Contoh: laporan berita, laporan percobaan IPA, laporan karyawisata.
+                                        </p>
+                                    </div>
+
+                                    <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200">
+                                        <h4 class="font-bold text-navy-900 flex items-center gap-2">
+                                            <i class="fa-solid fa-landmark text-emerald-600"></i> 3. Historical Recount
+                                        </h4>
+                                        <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                                            Menceritakan peristiwa bersejarah di masa lalu. Contoh: Hari Kemerdekaan Indonesia 17 Agustus 1945.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-5 p-3.5 bg-navy-900 text-white rounded-2xl text-xs flex items-center gap-3">
+                                <i class="fa-solid fa-lightbulb text-brandOrange-400 text-xl"></i>
+                                <span><strong>Tips Cepat:</strong> Jika ada kata <em>"Last week / Yesterday"</em> dan kata kerja <em>Verb 2</em>, hampir pasti itu adalah Recount Text!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- F: Interactive Examples of Recount Text (3 Examples) -->
+                    <div class="edtech-card p-6 sm:p-8 border-2 border-electric-500/30">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-2xl bg-brandOrange-500 text-white flex items-center justify-center font-extrabold text-lg">F</div>
+                                <div>
+                                    <h3 class="font-extrabold text-xl text-navy-900">Examples of Recount Text (Contoh Interaktif)</h3>
+                                    <p class="text-xs sm:text-sm text-slate-500">Pilih salah satu contoh teks di bawah ini untuk membaca, mendengarkan, dan menganalisis strukturnya:</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Selector Tabs for 3 Texts -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                            ${recountExamples.map((ex, idx) => `
+                                <button onclick="selectExampleText(${idx})"
+                                    class="p-3.5 rounded-2xl font-bold text-xs sm:text-sm text-left transition flex items-center justify-between border-2 ${
+                                        appState.activeTextIndex === idx
+                                        ? 'bg-electric-500 text-white border-electric-600 shadow-lg'
+                                        : 'bg-slate-50 text-navy-900 border-slate-200 hover:border-electric-400'
+                                    }">
+                                    <span>${ex.title}</span>
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </button>
+                            `).join('')}
+                        </div>
+
+                        <!-- Interactive Text Analyzer Card -->
+                        <div class="bg-slate-50 rounded-3xl p-5 sm:p-7 border border-slate-200">
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                                <!-- Illustration & Controls -->
+                                <div class="lg:col-span-4 space-y-4">
+                                    ${getExampleIllustrationSVG(currentEx.illustrationType)}
+                                    <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-2.5">
+                                        <span class="text-xs font-extrabold text-navy-900 uppercase tracking-wider block">Alat Bantu Belajar:</span>
+                                        
+                                        <button onclick="speakText(\`${fullEnglishText}\`, 'en-US')" class="w-full py-2.5 px-4 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-bold rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 btn-3d">
+                                            <i class="fa-solid fa-volume-high"></i> READ THE TEXT (AUDIO)
+                                        </button>
+
+                                        <button onclick="toggleTextTranslation()" class="w-full py-2.5 px-4 ${appState.showTranslation ? 'bg-navy-900 text-white' : 'bg-electric-500 hover:bg-electric-600 text-white'} font-bold rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 btn-3d">
+                                            <i class="fa-solid fa-language"></i> ${appState.showTranslation ? 'HIDE TRANSLATION' : 'TRANSLATE (INDONESIA)'}
+                                        </button>
+
+                                        <div class="pt-2 border-t border-slate-100 space-y-2">
+                                            <span class="text-[11px] font-bold text-slate-500 block">Sorot Analisis Teks:</span>
+                                            <div class="grid grid-cols-2 gap-2">
+                                                <button onclick="setHighlightMode('structure')" class="py-2 px-2.5 rounded-xl text-xs font-bold border ${appState.highlightMode === 'structure' ? 'bg-blue-600 text-white border-blue-600' : 'bg-blue-50 text-blue-700 border-blue-200'}">
+                                                    <i class="fa-solid fa-layer-group mr-1"></i> Struktur Teks
+                                                </button>
+                                                <button onclick="setHighlightMode('past')" class="py-2 px-2.5 rounded-xl text-xs font-bold border ${appState.highlightMode === 'past' ? 'bg-amber-500 text-white border-amber-500' : 'bg-amber-50 text-amber-800 border-amber-200'}">
+                                                    <i class="fa-solid fa-highlighter mr-1"></i> Past Tense (V2)
+                                                </button>
+                                            </div>
+                                            ${appState.highlightMode !== 'none' ? `
+                                                <button onclick="setHighlightMode('none')" class="w-full py-1.5 text-xs text-slate-500 hover:text-navy-900 font-semibold">
+                                                    Reset Warna Sorotan
+                                                </button>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Text Content & Analysis -->
+                                <div class="lg:col-span-8 space-y-5">
+                                    <div class="flex flex-wrap items-center justify-between gap-2">
+                                        <h4 class="text-xl sm:text-2xl font-extrabold text-navy-900">${currentEx.title}</h4>
+                                        <span class="px-3 py-1 bg-blue-100 text-electric-700 font-bold text-xs rounded-full">${currentEx.category}</span>
+                                    </div>
+
+                                    <!-- Legend when structure highlight active -->
+                                    ${appState.highlightMode === 'structure' ? `
+                                        <div class="flex flex-wrap gap-2 text-xs font-bold bg-white p-3 rounded-xl border border-slate-200">
+                                            <span class="px-2.5 py-1 rounded bg-blue-100 text-blue-800">Biru: Orientation</span>
+                                            <span class="px-2.5 py-1 rounded bg-orange-100 text-orange-800">Oranye: Events</span>
+                                            <span class="px-2.5 py-1 rounded bg-emerald-100 text-emerald-800">Hijau: Reorientation</span>
+                                        </div>
+                                    ` : ''}
+
+                                    <!-- English Paragraphs -->
+                                    <div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-4 text-sm sm:text-base leading-relaxed text-slate-800 font-nunito">
+                                        <p class="${appState.highlightMode === 'structure' ? 'hl-orientation' : ''}">
+                                            ${appState.highlightMode === 'structure' ? '<strong class="text-electric-700 text-xs uppercase block mb-1">[Orientation]</strong>' : ''}
+                                            ${formatPastVerbs(currentEx.orientation.en, currentEx.pastVerbs)}
+                                        </p>
+                                        <p class="${appState.highlightMode === 'structure' ? 'hl-events' : ''}">
+                                            ${appState.highlightMode === 'structure' ? '<strong class="text-brandOrange-700 text-xs uppercase block mb-1">[Events]</strong>' : ''}
+                                            ${formatPastVerbs(currentEx.events.en, currentEx.pastVerbs)}
+                                        </p>
+                                        <p class="${appState.highlightMode === 'structure' ? 'hl-reorientation' : ''}">
+                                            ${appState.highlightMode === 'structure' ? '<strong class="text-emerald-700 text-xs uppercase block mb-1">[Reorientation]</strong>' : ''}
+                                            ${formatPastVerbs(currentEx.reorientation.en, currentEx.pastVerbs)}
+                                        </p>
+                                    </div>
+
+                                    <!-- Indonesian Translation Box -->
+                                    ${appState.showTranslation ? `
+                                        <div class="bg-blue-50 p-5 rounded-2xl border-2 border-blue-200 space-y-2 fade-in">
+                                            <h5 class="font-bold text-navy-900 text-sm flex items-center gap-2">
+                                                <i class="fa-solid fa-language text-electric-600"></i> Terjemahan Bahasa Indonesia:
+                                            </h5>
+                                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${currentEx.orientation.id}</p>
+                                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${currentEx.events.id}</p>
+                                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${currentEx.reorientation.id}</p>
+                                        </div>
+                                    ` : ''}
+
+                                    <!-- Simple Past Verbs & Key Vocabulary -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200">
+                                            <h5 class="font-bold text-amber-900 text-xs sm:text-sm mb-2 flex items-center gap-1.5">
+                                                <i class="fa-solid fa-bolt text-amber-600"></i> Simple Past Tense (Verb 2) di Teks:
+                                            </h5>
+                                            <div class="flex flex-wrap gap-1.5">
+                                                ${currentEx.pastVerbs.map(v => `<span class="px-2.5 py-1 bg-white border border-amber-300 rounded-lg text-xs font-bold text-amber-900">${v}</span>`).join('')}
+                                            </div>
+                                        </div>
+
+                                        <div class="bg-white p-4 rounded-2xl border border-slate-200">
+                                            <h5 class="font-bold text-navy-900 text-xs sm:text-sm mb-2 flex items-center gap-1.5">
+                                                <i class="fa-solid fa-book-bookmark text-electric-600"></i> Kosakata Penting (Vocabulary):
+                                            </h5>
+                                            <ul class="space-y-1 text-xs">
+                                                ${currentEx.vocabulary.map(item => `
+                                                    <li class="flex justify-between border-b border-slate-100 pb-1">
+                                                        <span class="font-bold text-navy-800">${item.word}</span>
+                                                        <span class="text-slate-600">${item.meaning}</span>
+                                                    </li>
+                                                `).join('')}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectExampleText(idx) {
+            playSoundEffect('click');
+            appState.activeTextIndex = idx;
+            renderMateri(document.getElementById('content-area'));
+        }
+
+        function toggleTextTranslation() {
+            playSoundEffect('click');
+            appState.showTranslation = !appState.showTranslation;
+            renderMateri(document.getElementById('content-area'));
+        }
+
+        function setHighlightMode(mode) {
+            playSoundEffect('click');
+            appState.highlightMode = mode;
+            renderMateri(document.getElementById('content-area'));
+        }
+
+        // --- 7. MENU 2: SIMULASI (INTERACTIVE STORY BUILDER) ---
+        function renderSimulasi(container) {
+            container.innerHTML = `
+                <div class="fade-in space-y-6">
+                    <div class="bg-gradient-to-r from-brandOrange-500 to-amber-500 rounded-3xl p-6 sm:p-8 text-white shadow-xl">
+                        <span class="px-3 py-1 bg-navy-900/30 rounded-full text-xs font-bold uppercase">Menu 2 • Interactive Simulation</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold mt-2">Recount Story Builder Simulator</h2>
+                        <p class="text-orange-50 text-sm sm:text-base mt-1">Rangkai kalimat-kalimat di bawah ini menjadi sebuah Recount Text yang utuh, lalu dengarkan hasil ceritamu!</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- Control Panel -->
+                        <div class="lg:col-span-6 edtech-card p-6 space-y-5">
+                            <h3 class="font-extrabold text-lg text-navy-900 border-b pb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-sliders text-brandOrange-500"></i> Langkah 1: Pilih Komponen Cerita
+                            </h3>
+
+                            <div>
+                                <label class="block text-xs font-bold text-electric-600 uppercase mb-1.5">1. Orientation (Kapan, Siapa, Di Mana?)</label>
+                                <select id="sim-orientation" onchange="updateSimulationPreview()" class="w-full p-3 rounded-xl border-2 border-slate-200 focus:border-electric-500 text-sm font-semibold bg-slate-50">
+                                    <option value="Last Sunday, my family and I went to Mount Krakatau viewpoint in Kalianda.">Last Sunday, my family and I went to Mount Krakatau viewpoint in Kalianda.</option>
+                                    <option value="Yesterday afternoon, my best friend and I visited the city library to read history books.">Yesterday afternoon, my best friend and I visited the city library to read history books.</option>
+                                    <option value="Two months ago, our class joined a camping activity at the school yard.">Two months ago, our class joined a camping activity at the school yard.</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-brandOrange-600 uppercase mb-1.5">2. Event 1 (Kejadian Pertama)</label>
+                                <select id="sim-event1" onchange="updateSimulationPreview()" class="w-full p-3 rounded-xl border-2 border-slate-200 focus:border-brandOrange-500 text-sm font-semibold bg-slate-50">
+                                    <option value="First, we prepared all the equipment and took some pictures together.">First, we prepared all the equipment and took some pictures together.</option>
+                                    <option value="First, we walked around the area and enjoyed the fresh morning air.">First, we walked around the area and enjoyed the fresh morning air.</option>
+                                    <option value="First, we met our guide and listened to the safety instructions carefully.">First, we met our guide and listened to the safety instructions carefully.</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-brandOrange-600 uppercase mb-1.5">3. Event 2 (Kejadian Selanjutnya - Verb 2)</label>
+                                <select id="sim-event2" onchange="updateSimulationPreview()" class="w-full p-3 rounded-xl border-2 border-slate-200 focus:border-brandOrange-500 text-sm font-semibold bg-slate-50">
+                                    <option value="After that, we ate delicious snacks and shared funny stories.">After that, we ate delicious snacks and shared funny stories.</option>
+                                    <option value="Then, we played exciting games and helped each other.">Then, we played exciting games and helped each other.</option>
+                                    <option value="Next, we wrote interesting notes in our English notebooks.">Next, we wrote interesting notes in our English notebooks.</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-emerald-600 uppercase mb-1.5">4. Reorientation (Kesan & Penutup)</label>
+                                <select id="sim-reorientation" onchange="updateSimulationPreview()" class="w-full p-3 rounded-xl border-2 border-slate-200 focus:border-emerald-500 text-sm font-semibold bg-slate-50">
+                                    <option value="Finally, we went home happily. It was a truly memorable day!">Finally, we went home happily. It was a truly memorable day!</option>
+                                    <option value="We felt very tired, yet we were proud of our wonderful experience.">We felt very tired, yet we were proud of our wonderful experience.</option>
+                                    <option value="In the end, I learned many new things and I hope to go there again.">In the end, I learned many new things and I hope to go there again.</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Live Output Preview -->
+                        <div class="lg:col-span-6 edtech-card p-6 bg-navy-900 text-white flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between border-b border-white/15 pb-3 mb-4">
+                                    <h3 class="font-extrabold text-lg flex items-center gap-2 text-brandOrange-400">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i> Hasil Simulasi Recount Text
+                                    </h3>
+                                    <span class="px-2.5 py-1 bg-emerald-500/20 text-emerald-300 rounded-lg text-xs font-bold">Valid Past Tense ✓</span>
+                                </div>
+
+                                <div id="sim-output-box" class="bg-white/10 rounded-2xl p-5 space-y-3 text-sm sm:text-base leading-relaxed font-nunito">
+                                    <!-- Filled by updateSimulationPreview() -->
+                                </div>
+                            </div>
+
+                            <div class="pt-6 flex flex-wrap gap-3">
+                                <button onclick="readSimulationStory()" class="flex-1 py-3 px-4 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-bold rounded-xl btn-3d flex items-center justify-center gap-2 text-sm">
+                                    <i class="fa-solid fa-volume-high"></i> Dengarkan Ceritamu
+                                </button>
+                                <button onclick="completeSimulation()" class="py-3 px-5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl btn-3d flex items-center justify-center gap-2 text-sm">
+                                    <i class="fa-solid fa-check-double"></i> Tandai Selesai
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            updateSimulationPreview();
+        }
+
+        function updateSimulationPreview() {
+            const o = document.getElementById('sim-orientation').value;
+            const e1 = document.getElementById('sim-event1').value;
+            const e2 = document.getElementById('sim-event2').value;
+            const r = document.getElementById('sim-reorientation').value;
+
+            document.getElementById('sim-output-box').innerHTML = `
+                <p><span class="text-xs font-bold uppercase text-blue-300 block">[Orientation]</span> ${o}</p>
+                <p><span class="text-xs font-bold uppercase text-orange-300 block">[Events]</span> ${e1} ${e2}</p>
+                <p><span class="text-xs font-bold uppercase text-emerald-300 block">[Reorientation]</span> ${r}</p>
+            `;
+        }
+
+        function readSimulationStory() {
+            const o = document.getElementById('sim-orientation').value;
+            const e1 = document.getElementById('sim-event1').value;
+            const e2 = document.getElementById('sim-event2').value;
+            const r = document.getElementById('sim-reorientation').value;
+            speakText(`${o} ${e1} ${e2} ${r}`, 'en-US');
+        }
+
+        function completeSimulation() {
+            playSoundEffect('success');
+            appState.progress.simulasiDone = true;
+            showToast('Hebat! Simulasi Story Builder berhasil diselesaikan (+100% Progres Simulasi).', 'success');
+        }
+
+        // --- 8. MENU 3: PRAKTIKUM (VERB 2 & STRUCTURE LAB) ---
+        const praktikumItems = [
+            { v1: 'go', v2: 'went', meaning: 'pergi' },
+            { v1: 'eat', v2: 'ate', meaning: 'makan' },
+            { v1: 'see', v2: 'saw', meaning: 'melihat' },
+            { v1: 'buy', v2: 'bought', meaning: 'membeli' },
+            { v1: 'visit', v2: 'visited', meaning: 'mengunjungi' },
+            { v1: 'swim', v2: 'swam', meaning: 'berenang' }
+        ];
+
+        function renderPraktikum(container) {
+            container.innerHTML = `
+                <div class="fade-in space-y-6">
+                    <div class="bg-gradient-to-r from-teal-700 to-emerald-600 rounded-3xl p-6 sm:p-8 text-white shadow-xl">
+                        <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase">Menu 3 • Language Lab Praktikum</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold mt-2">Praktikum Mengubah Kata Kerja (Verb 1 → Verb 2)</h2>
+                        <p class="text-teal-50 text-sm sm:text-base mt-1">Ubah kata kerja dasar (Verb 1) menjadi bentuk lampau (Simple Past / Verb 2) untuk melengkapi kalimat Recount Text!</p>
+                    </div>
+
+                    <div class="edtech-card p-6 sm:p-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${praktikumItems.map((item, idx) => `
+                                <div class="p-4 rounded-2xl bg-slate-50 border-2 border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                    <div>
+                                        <span class="text-xs font-bold text-teal-600 uppercase">Soal #${idx + 1} (${item.meaning})</span>
+                                        <p class="font-extrabold text-lg text-navy-900">Verb 1: <span class="text-electric-600">${item.v1}</span> → Verb 2: ?</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <input type="text" id="prak-input-${idx}" placeholder="Ketik Verb 2..." class="w-36 px-3.5 py-2 rounded-xl border-2 border-slate-300 focus:border-teal-600 outline-none font-bold text-sm text-navy-900">
+                                        <span id="prak-status-${idx}" class="text-lg"></span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="mt-6 flex flex-wrap items-center justify-between gap-4 border-t pt-5">
+                            <div id="prak-score-display" class="font-extrabold text-navy-900 text-base">
+                                Skor Praktikum Saat Ini: <span class="text-teal-600">${appState.progress.praktikumScore}%</span>
+                            </div>
+                            <div class="flex gap-3">
+                                <button onclick="checkPraktikum()" class="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl btn-3d flex items-center gap-2 text-sm">
+                                    <i class="fa-solid fa-check-circle"></i> Periksa Jawaban Praktikum
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkPraktikum() {
+            let correct = 0;
+            praktikumItems.forEach((item, idx) => {
+                const input = document.getElementById(`prak-input-${idx}`);
+                const status = document.getElementById(`prak-status-${idx}`);
+                const val = input.value.trim().toLowerCase();
+                if (val === item.v2) {
+                    correct++;
+                    input.classList.remove('border-rose-500');
+                    input.classList.add('border-emerald-500', 'bg-emerald-50');
+                    status.innerHTML = '✅';
+                } else {
+                    input.classList.remove('border-emerald-500');
+                    input.classList.add('border-rose-500', 'bg-rose-50');
+                    status.innerHTML = '❌';
+                }
+            });
+
+            const score = Math.round((correct / praktikumItems.length) * 100);
+            appState.progress.praktikumScore = score;
+            document.getElementById('prak-score-display').innerHTML = `Skor Praktikum Saat Ini: <span class="text-teal-600">${score}% (${correct}/${praktikumItems.length} Benar)</span>`;
+
+            if (score === 100) {
+                playSoundEffect('success');
+                showModal('Luar Biasa!', 'Kamu berhasil mengubah semua Verb 1 menjadi Verb 2 dengan sempurna (100%)!', 'fa-trophy');
+            } else {
+                playSoundEffect('error');
+                showToast(`Benar ${correct} dari ${praktikumItems.length}. Perbaiki yang masih bertanda ❌!`, 'warning');
+            }
+        }
+
+        // --- 9. MENU 4: GAME (SCRAMBLE SENTENCE & TIME DETECTIVE) ---
+        const gameLevels = [
+            {
+                hint: 'Susun kalimat Orientation tentang liburan ke Pantai Mutun!',
+                words: ['Last', 'Sunday,', 'we', 'went', 'to', 'Mutun', 'Beach.'],
+                answer: 'Last Sunday, we went to Mutun Beach.'
+            },
+            {
+                hint: 'Susun kalimat Event menggunakan kata kerja lampau (ate)!',
+                words: ['Then,', 'my', 'family', 'ate', 'delicious', 'grilled', 'fish.'],
+                answer: 'Then, my family ate delicious grilled fish.'
+            },
+            {
+                hint: 'Susun kalimat Reorientation penutup cerita!',
+                words: ['It', 'was', 'an', 'unforgettable', 'holiday', 'for', 'me.'],
+                answer: 'It was an unforgettable holiday for me.'
+            }
+        ];
+
+        let currentGameLvl = 0;
+        let selectedWords = [];
+        let availableWords = [];
+
+        function initGameLevel(lvl) {
+            currentGameLvl = lvl;
+            selectedWords = [];
+            availableWords = [...gameLevels[lvl].words].sort(() => Math.random() - 0.5);
+        }
+
+        function renderGame(container) {
+            if (availableWords.length === 0 && selectedWords.length === 0) {
+                initGameLevel(0);
+            }
+            const lvlData = gameLevels[currentGameLvl];
+
+            container.innerHTML = `
+                <div class="fade-in space-y-6">
+                    <div class="bg-gradient-to-r from-purple-700 to-indigo-600 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                            <span class="px-3 py-1 bg-brandOrange-500 rounded-full text-xs font-bold uppercase">Menu 4 • Educational Game</span>
+                            <h2 class="text-2xl sm:text-3xl font-extrabold mt-2">Past Sentence Scramble Game</h2>
+                            <p class="text-purple-100 text-sm mt-1">Klik kata-kata acak di bawah untuk menyusun kalimat Recount Text yang benar!</p>
+                        </div>
+                        <div class="bg-white/15 px-5 py-3 rounded-2xl text-center">
+                            <span class="text-xs uppercase block text-purple-200">Skor Game</span>
+                            <span class="text-2xl font-extrabold text-brandOrange-400">${appState.progress.gameScore} Poin</span>
+                        </div>
+                    </div>
+
+                    <div class="edtech-card p-6 sm:p-8 max-w-3xl mx-auto text-center space-y-6">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-500">
+                            <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full">Level ${currentGameLvl + 1} dari ${gameLevels.length}</span>
+                            <span>Petunjuk: ${lvlData.hint}</span>
+                        </div>
+
+                        <!-- Drop / Selected Area -->
+                        <div class="min-h-[84px] p-4 rounded-2xl bg-slate-100 border-2 border-dashed border-purple-400 flex flex-wrap items-center justify-center gap-2">
+                            ${selectedWords.length === 0
+                                ? '<span class="text-slate-400 text-sm font-semibold">Klik kata di bawah untuk memindahkannya ke sini...</span>'
+                                : selectedWords.map((w, i) => `
+                                    <button onclick="removeGameWord(${i})" class="px-4 py-2 bg-electric-500 text-white font-bold rounded-xl shadow hover:bg-rose-500 transition text-sm sm:text-base">
+                                        ${w}
+                                    </button>
+                                `).join('')
+                            }
+                        </div>
+
+                        <!-- Available Scrambled Words -->
+                        <div class="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+                            ${availableWords.map((w, i) => `
+                                <button onclick="pickGameWord(${i})" class="px-4 py-2.5 bg-white border-2 border-purple-300 hover:border-brandOrange-500 text-navy-900 font-extrabold rounded-xl btn-3d text-sm sm:text-base">
+                                    ${w}
+                                </button>
+                            `).join('')}
+                        </div>
+
+                        <div class="pt-4 flex flex-wrap justify-center gap-3">
+                            <button onclick="resetCurrentGameLevel()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-navy-900 font-bold rounded-xl text-sm">
+                                <i class="fa-solid fa-rotate-left mr-1"></i> Ulangi Level
+                            </button>
+                            <button onclick="checkGameAnswer()" class="px-7 py-2.5 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-bold rounded-xl btn-3d text-sm">
+                                <i class="fa-solid fa-check mr-1"></i> Cek Susunan Kalimat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function pickGameWord(idx) {
+            playSoundEffect('click');
+            const word = availableWords.splice(idx, 1)[0];
+            selectedWords.push(word);
+            renderGame(document.getElementById('content-area'));
+        }
+
+        function removeGameWord(idx) {
+            playSoundEffect('click');
+            const word = selectedWords.splice(idx, 1)[0];
+            availableWords.push(word);
+            renderGame(document.getElementById('content-area'));
+        }
+
+        function resetCurrentGameLevel() {
+            playSoundEffect('click');
+            initGameLevel(currentGameLvl);
+            renderGame(document.getElementById('content-area'));
+        }
+
+        function checkGameAnswer() {
+            const userSentence = selectedWords.join(' ');
+            const correctSentence = gameLevels[currentGameLvl].answer;
+
+            if (userSentence === correctSentence) {
+                playSoundEffect('success');
+                speakText(correctSentence, 'en-US');
+                appState.progress.gameScore = Math.min(100, appState.progress.gameScore + 35);
+                if (appState.progress.gameScore > 100) appState.progress.gameScore = 100;
+
+                if (currentGameLvl < gameLevels.length - 1) {
+                    showToast('Tepat Sekali! Lanjut ke level berikutnya!', 'success');
+                    initGameLevel(currentGameLvl + 1);
+                    renderGame(document.getElementById('content-area'));
+                } else {
+                    appState.progress.gameScore = 100;
+                    showModal('Juara Game Recount Text!', 'Selamat! Kamu berhasil menyelesaikan semua level penyusunan kalimat Recount Text dengan skor 100!', 'fa-gamepad');
+                    renderGame(document.getElementById('content-area'));
+                }
+            } else {
+                playSoundEffect('error');
+                showToast('Susunan kata belum tepat. Coba perhatikan huruf kapital & tanda titik!', 'error');
+            }
+        }
+
+        // --- 10. MENU 5: LKPD (LEMBAR KERJA PESERTA DIDIK DIGITAL) ---
+        function renderLKPD(container) {
+            container.innerHTML = `
+                <div class="fade-in space-y-6">
+                    <div class="bg-gradient-to-r from-indigo-700 to-navy-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl">
+                        <span class="px-3 py-1 bg-brandOrange-500 rounded-full text-xs font-bold uppercase">Menu 5 • Digital Worksheet</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold mt-2">LKPD Digital: Writing My Past Experience</h2>
+                        <p class="text-indigo-100 text-sm sm:text-base mt-1">Kerjakan Lembar Kerja Peserta Didik berikut secara mandiri dengan panduan struktur teks.</p>
+                    </div>
+
+                    <div class="edtech-card p-6 sm:p-8 space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 block">Nama Siswa:</label>
+                                <input id="lkpd-name" type="text" value="${appState.studentName}" class="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 font-bold text-navy-900 text-sm">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 block">Kelas:</label>
+                                <input id="lkpd-class" type="text" value="${appState.studentClass}" class="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 font-bold text-navy-900 text-sm">
+                            </div>
+                        </div>
+
+                        <!-- Task 1: Reading Comprehension -->
+                        <div class="space-y-3">
+                            <h3 class="font-extrabold text-lg text-navy-900">Activity 1: Identifying Text Components</h3>
+                            <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200 text-sm text-navy-900">
+                                <em>"Last weekend, Rina visited her grandmother's village in Bakauheni. She helped her grandmother harvest bananas in the garden. She felt very joyful."</em>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">1. Who is the participant in the text? (Siapa tokohnya?)</label>
+                                    <input id="lkpd-q1" type="text" placeholder="Contoh: Rina and her grandmother" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">2. Write two Past Verbs (Verb 2) from the text!</label>
+                                    <input id="lkpd-q2" type="text" placeholder="Contoh: visited, helped" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Task 2: Guided Writing -->
+                        <div class="space-y-3 border-t pt-5">
+                            <h3 class="font-extrabold text-lg text-navy-900">Activity 2: Write Your Own Short Recount Text</h3>
+                            <p class="text-xs text-slate-500">Tuliskan pengalaman liburan atau kegiatan akhir pekanmu dalam Bahasa Inggris sederhana (3–5 kalimat):</p>
+                            <textarea id="lkpd-essay" rows="4" placeholder="Last Sunday, I went to... First, I... Finally, I felt..." class="w-full p-4 rounded-2xl border-2 border-slate-200 focus:border-indigo-600 outline-none text-sm leading-relaxed"></textarea>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
+                            <span class="text-xs font-bold ${appState.progress.lkpdSubmitted ? 'text-emerald-600' : 'text-slate-400'}">
+                                ${appState.progress.lkpdSubmitted ? '✅ Status LKPD: Sudah Dikumpulkan' : 'Status LKPD: Belum Dikumpulkan'}
+                            </span>
+                            <button onclick="submitLKPD()" class="px-7 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl btn-3d flex items-center gap-2 text-sm">
+                                <i class="fa-solid fa-paper-plane"></i> Simpan & Kumpulkan LKPD
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function submitLKPD() {
+            const name = document.getElementById('lkpd-name').value.trim();
+            const cls = document.getElementById('lkpd-class').value.trim();
+            const q1 = document.getElementById('lkpd-q1').value.trim();
+            const q2 = document.getElementById('lkpd-q2').value.trim();
+            const essay = document.getElementById('lkpd-essay').value.trim();
+
+            if (!q1 || !q2 || !essay) {
+                playSoundEffect('error');
+                showToast('Mohon lengkapi semua kolom jawaban LKPD terlebih dahulu!', 'warning');
+                return;
+            }
+
+            if (name) appState.studentName = name;
+            if (cls) appState.studentClass = cls;
+            document.getElementById('display-student-name').textContent = `${appState.studentName} (${appState.studentClass})`;
+            appState.progress.lkpdSubmitted = true;
+
+            playSoundEffect('success');
+            showModal('LKPD Berhasil Disimpan!', `Terima kasih <strong>${appState.studentName}</strong>. Jawaban LKPD digitalmu telah terekam di menu <strong>Hasil Belajar</strong>.`, 'fa-file-circle-check');
+            renderLKPD(document.getElementById('content-area'));
+        }
+
+        // --- 11. MENU 6: EVALUASI (10 SOAL PILIHAN GANDA INTERAKTIF) ---
+        const quizQuestions = [
+            {
+                q: "What is the social function of a Recount Text?",
+                options: [
+                    "To describe a specific person or thing in general",
+                    "To retell past events or experiences",
+                    "To explain how to make something step by step",
+                    "To amuse readers with a fictional fairy tale"
+                ],
+                ans: 1
+            },
+            {
+                q: "What is the correct generic structure of Recount Text?",
+                options: [
+                    "Identification - Description",
+                    "Goal - Materials - Steps",
+                    "Orientation - Events - Reorientation",
+                    "Orientation - Complication - Resolution"
+                ],
+                ans: 2
+            },
+            {
+                q: "Which tense is mostly used in Recount Text?",
+                options: [
+                    "Simple Present Tense",
+                    "Simple Future Tense",
+                    "Present Continuous Tense",
+                    "Simple Past Tense"
+                ],
+                ans: 3
+            },
+            {
+                q: "'Last month, my family and I went to Marina Beach.' Which part of Recount Text is this sentence?",
+                options: [
+                    "Orientation",
+                    "Event 1",
+                    "Reorientation",
+                    "Complication"
+                ],
+                ans: 0
+            },
+            {
+                q: "Change the verb in brackets into Simple Past Tense: 'Yesterday, we (visit) Lampung Museum.'",
+                options: [
+                    "visit",
+                    "visiting",
+                    "visited",
+                    "visits"
+                ],
+                ans: 2
+            },
+            {
+                q: "Which of the following is an irregular Past Verb (Verb 2)?",
+                options: [
+                    "Played",
+                    "Walked",
+                    "Went",
+                    "Listened"
+                ],
+                ans: 2
+            },
+            {
+                q: "Which word is a Time Connective commonly used in Recount Text?",
+                options: [
+                    "Because",
+                    "After that",
+                    "Beautiful",
+                    "Always"
+                ],
+                ans: 1
+            },
+            {
+                q: "'We felt very tired, but it was a wonderful holiday.' This sentence belongs to...",
+                options: [
+                    "Orientation",
+                    "Events",
+                    "Reorientation",
+                    "Title"
+                ],
+                ans: 2
+            },
+            {
+                q: "A recount text that tells about historical events such as Indonesia's Independence Day is called...",
+                options: [
+                    "Personal Recount",
+                    "Factual Recount",
+                    "Historical Recount",
+                    "Imaginative Recount"
+                ],
+                ans: 2
+            },
+            {
+                q: "They _____ delicious grilled fish at the beach last Sunday.",
+                options: [
+                    "eat",
+                    "ate",
+                    "eaten",
+                    "eating"
+                ],
+                ans: 1
+            }
+        ];
+
+        function renderEvaluasi(container) {
+            container.innerHTML = `
+                <div class="fade-in space-y-6">
+                    <div class="bg-gradient-to-r from-rose-600 to-brandOrange-500 rounded-3xl p-6 sm:p-8 text-white shadow-xl">
+                        <span class="px-3 py-1 bg-navy-900/30 rounded-full text-xs font-bold uppercase">Menu 6 • Final Evaluation</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold mt-2">Evaluasi Pemahaman Recount Text</h2>
+                        <p class="text-rose-50 text-sm sm:text-base mt-1">Jawablah 10 soal pilihan ganda berikut untuk mengukur penguasaan materimu!</p>
+                    </div>
+
+                    <div class="space-y-5">
+                        ${quizQuestions.map((item, qIdx) => `
+                            <div class="edtech-card p-5 sm:p-6">
+                                <p class="font-extrabold text-navy-900 text-sm sm:text-base mb-4">
+                                    <span class="inline-block w-7 h-7 rounded-lg bg-electric-500 text-white text-center leading-7 text-xs mr-2">${qIdx + 1}</span>
+                                    ${item.q}
+                                </p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                    ${item.options.map((opt, oIdx) => `
+                                        <label class="flex items-center gap-3 p-3.5 rounded-xl border-2 border-slate-200 hover:border-electric-400 cursor-pointer transition bg-slate-50 has-[:checked]:bg-blue-50 has-[:checked]:border-electric-600">
+                                            <input type="radio" name="quiz-q-${qIdx}" value="${oIdx}" class="w-4 h-4 text-electric-600">
+                                            <span class="text-xs sm:text-sm font-semibold text-navy-800">${opt}</span>
+                                        </label>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="edtech-card p-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-navy-900 text-white">
+                        <div>
+                            <h4 class="font-bold text-base">Sudah yakin dengan semua jawabanmu?</h4>
+                            <p class="text-xs text-blue-200">Klik tombol Selesai Evaluasi untuk melihat nilai dan sertifikatmu.</p>
+                        </div>
+                        <button onclick="gradeEvaluasi()" class="w-full sm:w-auto px-8 py-3.5 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-extrabold rounded-2xl btn-3d flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-award"></i> Selesai & Lihat Nilai
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function gradeEvaluasi() {
+            let correctCount = 0;
+            let unanswered = 0;
+
+            quizQuestions.forEach((item, idx) => {
+                const selected = document.querySelector(`input[name="quiz-q-${idx}"]:checked`);
+                if (!selected) {
+                    unanswered++;
+                } else if (parseInt(selected.value) === item.ans) {
+                    correctCount++;
+                }
+            });
+
+            if (unanswered > 0) {
+                playSoundEffect('error');
+                showToast(`Masih ada ${unanswered} soal yang belum dijawab!`, 'warning');
+                return;
+            }
+
+            const finalScore = correctCount * 10;
+            appState.progress.evaluasiScore = finalScore;
+            appState.progress.evaluasiCorrect = correctCount;
+
+            playSoundEffect('success');
+            showModal(
+                'Evaluasi Selesai!',
+                `Skor Evaluasi Anda: <strong class="text-2xl text-electric-600 block my-2">${finalScore} / 100</strong> (${correctCount} benar dari 10 soal). Silakan cek menu <strong>8. HASIL BELAJAR</strong> untuk melihat rapor lengkap!`,
+                'fa-award'
+            );
+        }
+
+        // --- 12. MENU 7: PENGEMBANG (DEVELOPER PROFILE) ---
+        function renderPengembang(container) {
+            container.innerHTML = `
+                <div class="fade-in max-w-3xl mx-auto">
+                    <div class="edtech-card overflow-hidden">
+                        <div class="h-32 bg-gradient-to-r from-navy-900 via-electric-600 to-brandOrange-500"></div>
+                        <div class="px-6 sm:px-8 pb-8 text-center relative">
+                            <div class="w-24 h-24 rounded-3xl bg-white p-1.5 shadow-xl mx-auto -mt-12 flex items-center justify-center">
+                                <div class="w-full h-full rounded-2xl bg-navy-900 text-brandOrange-400 flex items-center justify-center text-4xl font-extrabold">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                </div>
+                            </div>
+
+                            <span class="inline-block mt-4 px-3 py-1 bg-blue-100 text-electric-700 font-bold text-xs rounded-full">Pengembang Media Pembelajaran Interaktif</span>
+                            <h2 class="text-2xl sm:text-3xl font-extrabold text-navy-900 mt-2">Sulton, S.Pd.</h2>
+                            <p class="text-slate-500 font-semibold text-sm sm:text-base">Guru Mata Pelajaran Bahasa Inggris • SMP Negeri 1 Kalianda</p>
+
+                            <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                                    <span class="text-xs font-bold text-slate-400 uppercase block">Instansi / Sekolah</span>
+                                    <span class="font-bold text-navy-900 text-sm sm:text-base">SMP Negeri 1 Kalianda, Lampung Selatan</span>
+                                </div>
+                                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                                    <span class="text-xs font-bold text-slate-400 uppercase block">Sasaran Kurikulum</span>
+                                    <span class="font-bold text-navy-900 text-sm sm:text-base">Kurikulum Merdeka • Fase D (Kelas IX SMP)</span>
+                                </div>
+                                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                                    <span class="text-xs font-bold text-slate-400 uppercase block">Topik Pembelajaran</span>
+                                    <span class="font-bold text-navy-900 text-sm sm:text-base">Recount Text (Explore the Past, Share the Story!)</span>
+                                </div>
+                                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                                    <span class="text-xs font-bold text-slate-400 uppercase block">Teknologi MPI</span>
+                                    <span class="font-bold text-navy-900 text-sm sm:text-base">HTML5, Tailwind CSS, JavaScript & Web Speech Audio</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 p-4 rounded-2xl bg-orange-50 border border-orange-200 text-xs sm:text-sm text-navy-800 italic">
+                                "Media pembelajaran ini dirancang untuk membantu siswa SMP Kelas IX memahami Recount Text secara visual, auditori, dan kinestetik melalui simulasi serta permainan edukatif."
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- 13. MENU 8: HASIL BELAJAR (LEARNING REPORT & PROGRESS) ---
+        function renderHasilBelajar(container) {
+            const evalScore = appState.progress.evaluasiScore !== null ? appState.progress.evaluasiScore : 0;
+            const predikat = evalScore >= 85 ? 'Sangat Baik (A)' : evalScore >= 70 ? 'Baik (B)' : evalScore > 0 ? 'Cukup (C)' : 'Belum Evaluasi';
+
+            container.innerHTML = `
+                <div class="fade-in space-y-6">
+                    <div class="bg-gradient-to-r from-emerald-700 to-navy-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                            <span class="px-3 py-1 bg-brandOrange-500 rounded-full text-xs font-bold uppercase">Menu 8 • Learning Analytics</span>
+                            <h2 class="text-2xl sm:text-3xl font-extrabold mt-2">Rapor & Hasil Belajar Siswa</h2>
+                            <p class="text-emerald-100 text-sm mt-1">Rekapitulasi aktivitas belajar mandiri pada topik Recount Text.</p>
+                        </div>
+                        <button onclick="promptStudentName()" class="px-4 py-2.5 bg-white/15 hover:bg-white/25 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2">
+                            <i class="fa-solid fa-pen"></i> Ubah Nama Siswa
+                        </button>
+                    </div>
+
+                    <!-- Student Certificate Summary Card -->
+                    <div class="edtech-card p-6 sm:p-8 border-2 border-emerald-500/40">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-5 mb-6">
+                            <div>
+                                <span class="text-xs font-bold text-slate-400 uppercase">Nama Peserta Didik</span>
+                                <h3 class="text-2xl font-extrabold text-navy-900">${appState.studentName}</h3>
+                                <p class="text-sm font-semibold text-electric-600">Kelas: ${appState.studentClass} • SMP Negeri 1 Kalianda</p>
+                            </div>
+                            <div class="text-left sm:text-right">
+                                <span class="text-xs font-bold text-slate-400 uppercase block">Predikat Evaluasi</span>
+                                <span class="inline-block mt-1 px-4 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 font-extrabold text-sm">
+                                    ${predikat}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200">
+                                <span class="text-xs font-bold text-electric-700 block">1. Materi & Simulasi</span>
+                                <span class="text-xl font-extrabold text-navy-900 mt-1 block">
+                                    ${appState.progress.simulasiDone ? '100% Selesai' : '50% (Materi)'}
+                                </span>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-teal-50 border border-teal-200">
+                                <span class="text-xs font-bold text-teal-700 block">2. Skor Praktikum Verb 2</span>
+                                <span class="text-xl font-extrabold text-navy-900 mt-1 block">${appState.progress.praktikumScore}%</span>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-purple-50 border border-purple-200">
+                                <span class="text-xs font-bold text-purple-700 block">3. Skor Mini Game</span>
+                                <span class="text-xl font-extrabold text-navy-900 mt-1 block">${appState.progress.gameScore} Poin</span>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-orange-50 border border-orange-200">
+                                <span class="text-xs font-bold text-brandOrange-700 block">4. Nilai Evaluasi Akhir</span>
+                                <span class="text-2xl font-extrabold text-brandOrange-600 mt-1 block">
+                                    ${appState.progress.evaluasiScore !== null ? appState.progress.evaluasiScore + ' / 100' : 'Belum Tes'}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+                            <div class="text-xs sm:text-sm">
+                                <strong>Status LKPD Digital:</strong>
+                                <span class="${appState.progress.lkpdSubmitted ? 'text-emerald-600 font-bold' : 'text-rose-500 font-bold'}">
+                                    ${appState.progress.lkpdSubmitted ? 'Sudah Dikerjakan & Tersimpan ✓' : 'Belum Dikerjakan (Silakan buka Menu 5. LKPD)'}
+                                </span>
+                            </div>
+                            <button onclick="navigateTo('evaluasi')" class="px-5 py-2.5 bg-electric-500 hover:bg-electric-600 text-white font-bold rounded-xl text-xs sm:text-sm">
+                                ${appState.progress.evaluasiScore !== null ? 'Ulangi Evaluasi' : 'Kerjakan Evaluasi Sekarang'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
